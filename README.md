@@ -34,13 +34,13 @@ Please let me know if you have any questions!
 
 ### Static :page_facing_up:
 
-The front-end of HolbertonBnB was designed from scratch using HTML5/CSS3 pages
+The front-end of ALXBnB was designed from scratch using HTML5/CSS3 pages
 integrated using Flask. While the front-end has not yet been officially deployed,
 screenshots are viewable in the README of the [web_flask](./web_flask) directory.
 
 ### Classes :cl:
 
-HolbertonBnB supports the following classes:
+ALXBnB supports the following classes:
 
 * BaseModel
 * User
@@ -70,7 +70,7 @@ object is loaded/re-loaded from any class instances stored in the JSON file
 
 Run by setting the environmental variables `HBNB_TYPE_STORAGE=db`.
 
-In `DBStorage` mode, every time the backend is initialized, HolbertonBnB
+In `DBStorage` mode, every time the backend is initialized, ALXBnB
 instantiates an instance of `DBStorage` called `storage`. The `storage` object
 is loaded/re-loaded from the MySQL database specified in the environmental variable
 `HBNB_MYSQL_DB`, using the user `HBNB_MYSQL_USER`, password `HBNB_MYSQL_PWD`, and
@@ -87,12 +87,12 @@ respectively.
 ## Console :computer:
 
 The console is a command line interpreter that permits management of the backend
-of HolbertonBnB. It can be used to handle and manipulate all classes utilized by
+of ALXBnB. It can be used to handle and manipulate all classes utilized by
 the application (achieved by calls on the `storage` object defined above).
 
 ### Using the Console
 
-The HolbertonBnB console can be run both interactively and non-interactively.
+The ALXBnB console can be run both interactively and non-interactively.
 To run the console in non-interactive mode, pipe any command(s) into an execution
 of the file `console.py` at the command line.
 
@@ -308,7 +308,7 @@ ef0fdc863c02'}
 
 ## Testing :straight_ruler:
 
-Unittests for the HolbertonBnB project are defined in the [tests](./tests)
+Unittests for the ALXBnB project are defined in the [tests](./tests)
 folder. To run the entire test suite simultaneously, execute the following command:
 
 ```
@@ -322,8 +322,5 @@ $ python3 unittest -m tests/test_console.py
 ```
 
 ## Authors :black_nib:
-* **Brennan D Baraban** <[bdbaraban](https://github.com/bdbaraban)>
-* **Samie Azad** <[sazad44](https://github.com/sazad44)>
-* **Andrew Lindburg** <[atlindburg](https://github.com/atlindburg)>
-* **Kevin Yook** <[yook00627](https://github.com/yook00627)>
-* **Miranda Evans** <miranda.r.evans@gmail.com>
+* **Dino Delil** 
+* **Francis Okolo** 
