@@ -1,66 +1,65 @@
 #!/usr/bin/python3
-"""
-Handles I/O, writing and reading, of JSON for storage of all class instances
-"""
+"""This module defines a class to manage file storage for hbnb clone"""
 import json
-from models import base_model, amenity, city, place, review, state, user
-from datetime import datetime
-
-strptime = datetime.strptime
-to_json = base_model.BaseModel.to_json
+from models.base_model import BaseModel
+from models.user import User
+from models.state import State
+from models.city import City
+from models.amenity import Amenity
+from models.place import Place
+from models.review import Review
+import shlex
 
 
 class FileStorage:
-    """handles long term storage of all class instances"""
-    CNC = {
-        'BaseModel': base_model.BaseModel,
-        'Amenity': amenity.Amenity,
-        'City': city.City,
-        'Place': place.Place,
-        'Review': review.Review,
-        'State': state.State,
-        'User': user.User
-    }
-    """CNC - this variable is a dictionary with:
-    keys: Class Names
-    values: Class type (used for instantiation)
-    """
-    __file_path = './dev/file.json'
+    """This class manages storage of hbnb models in JSON format"""
+    __file_path = 'file.json'
     __objects = {}
 
-    def all(self):
-        """returns private attribute: __objects"""
-        return FileStorage.__objects
+    def all(self, cls=None):
+        """Returns a dictionary of models currently in storage"""
+        dic = {}
+        if cls:
+            dictionary = self.__objects
+            for key in dictionary:
+                partition = key.replace('.', ' ')
+                partition = shlex.split(partition)
+                if (partition[0] == cls.__name__):
+                    dic[key] = self.__objects[key]
+            return (dic)
+        else:
+            return self.__objects
 
     def new(self, obj):
-        """sets / updates in __objects the obj with key <obj class name>.id"""
-        bm_id = "{}.{}".format(type(obj).__name__, obj.id)
-        FileStorage.__objects[bm_id] = obj
+        """Adds new object to storage dictionary"""
+        if obj:
+            key = "{}.{}".format(type(obj).__name__, obj.id)
+            self.__objects[key] = obj
 
     def save(self):
-        """serializes __objects to the JSON file (path: __file_path)"""
-        fname = FileStorage.__file_path
-        d = {}
-        for bm_id, bm_obj in FileStorage.__objects.items():
-            d[bm_id] = bm_obj.to_json()
-        with open(fname, mode='w', encoding='utf-8') as f_io:
-            json.dump(d, f_io)
+        """Saves storage dictionary to file"""
+        dictionary = {}
+        for key, value in self.__objects.items():
+            dictionary[key] = value.to_dict()
+        with open(self.__file_path, 'w', encoding='UTF-8') as f:
+            json.dump(dictionary, f)
 
     def reload(self):
-        """if file exists, deserializes JSON file to __objects, else nothing"""
-        fname = FileStorage.__file_path
-        FileStorage.__objects = {}
+        """Loads storage dictionary from file"""
         try:
-            with open(fname, mode='r', encoding='utf-8') as f_io:
-                new_objs = json.load(f_io)
-        except:
-            return
-        for o_id, d in new_objs.items():
-            k_cls = d['__class__']
-            FileStorage.__objects[o_id] = FileStorage.CNC[k_cls](**d)
+            with open(self.__file_path, 'r', encoding='UTF-8') as f:
+                for key, value in (json.load(f)).items():
+                    value = eval(value["__class__"])(**value)
+                    self.__objects[key] = value
+        except FileNotFoundError:
+            pass
+
+    def delete(self, obj=None):
+        """ delete obj from __objects if it’s inside """
+        if obj:
+            key = "{}.{}".format(type(obj).__name__, obj.id)
+            del self.__objects[key]
 
     def close(self):
-        """
-        Deserializes JSON file to objects
-        """
+        """ reload """
         self.reload()

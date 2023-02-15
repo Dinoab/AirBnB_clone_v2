@@ -1,116 +1,67 @@
 #!/usr/bin/python3
-"""
-Unit Test for Amenity Class
-"""
+"""test for amenity"""
 import unittest
-from datetime import datetime
-import models
-import json
-
-Amenity = models.amenity.Amenity
-BaseModel = models.base_model.BaseModel
+import os
+from models.amenity import Amenity
+from models.base_model import BaseModel
+import pep8
 
 
-class TestAmenityDocs(unittest.TestCase):
-    """Class for testing BaseModel docs"""
+class TestAmenity(unittest.TestCase):
+    """this will test the Amenity class"""
 
     @classmethod
     def setUpClass(cls):
-        print('\n\n.................................')
-        print('..... Testing Documentation .....')
-        print('........   Amenity  Class   ........')
-        print('.................................\n\n')
-
-    def test_doc_file(self):
-        """... documentation for the file"""
-        expected = '\nAmenity Class from Models Module\n'
-        actual = models.amenity.__doc__
-        self.assertEqual(expected, actual)
-
-    def test_doc_class(self):
-        """... documentation for the class"""
-        expected = 'Amenity class handles all application amenities'
-        actual = Amenity.__doc__
-        self.assertEqual(expected, actual)
-
-    def test_doc_init(self):
-        """... documentation for init function"""
-        expected = 'instantiates a new amenity'
-        actual = Amenity.__init__.__doc__
-        self.assertEqual(expected, actual)
-
-
-class TestAmenityInstances(unittest.TestCase):
-    """testing for class instances"""
+        """set up for test"""
+        cls.amenity = Amenity()
+        cls.amenity.name = "Breakfast"
 
     @classmethod
-    def setUpClass(cls):
-        print('\n\n.................................')
-        print('....... Testing Functions .......')
-        print('.........  Amenity  Class  .........')
-        print('.................................\n\n')
+    def teardown(cls):
+        """at the end of the test this will tear it down"""
+        del cls.amenity
 
-    def setUp(self):
-        """initializes new amenity for testing"""
-        self.amenity = Amenity()
-
-    def test_instantiation(self):
-        """... checks if Amenity is properly instantiated"""
-        self.assertIsInstance(self.amenity, Amenity)
-
-    def test_to_string(self):
-        """... checks if BaseModel is properly casted to string"""
-        my_str = str(self.amenity)
-        my_list = ['Amenity', 'id', 'created_at']
-        actual = 0
-        for sub_str in my_list:
-            if sub_str in my_str:
-                actual += 1
-        self.assertTrue(3 == actual)
-
-    def test_instantiation_no_updated(self):
-        """... should not have updated attribute"""
-        my_str = str(self.amenity)
-        actual = 0
-        if 'updated_at' in my_str:
-            actual += 1
-        self.assertTrue(0 == actual)
-
-    def test_updated_at(self):
-        """... save function should add updated_at attribute"""
-        self.amenity.save()
-        actual = type(self.amenity.updated_at)
-        expected = type(datetime.now())
-        self.assertEqual(expected, actual)
-
-    def test_to_json(self):
-        """... to_json should return serializable dict object"""
-        self.amenity_json = self.amenity.to_json()
-        actual = 1
+    def tearDown(self):
+        """teardown"""
         try:
-            serialized = json.dumps(self.amenity_json)
-        except:
-            actual = 0
-        self.assertTrue(1 == actual)
+            os.remove("file.json")
+        except Exception:
+            pass
 
-    def test_json_class(self):
-        """... to_json should include class key with value Amenity"""
-        self.amenity_json = self.amenity.to_json()
-        actual = None
-        if self.amenity_json['__class__']:
-            actual = self.amenity_json['__class__']
-        expected = 'Amenity'
-        self.assertEqual(expected, actual)
+    def test_pep8_Amenity(self):
+        """Tests pep8 style"""
+        style = pep8.StyleGuide(quiet=True)
+        p = style.check_files(['models/amenity.py'])
+        self.assertEqual(p.total_errors, 0, "fix pep8")
 
-    def test_email_attribute(self):
-        """... add email attribute"""
-        self.amenity.name = "greatWifi"
-        if hasattr(self.amenity, 'name'):
-            actual = self.amenity.name
-        else:
-            actual = ''
-        expected = "greatWifi"
-        self.assertEqual(expected, actual)
+    def test_checking_for_docstring_Amenity(self):
+        """checking for docstrings"""
+        self.assertIsNotNone(Amenity.__doc__)
 
-if __name__ == '__main__':
-    unittest.main
+    def test_attributes_Amenity(self):
+        """chekcing if amenity have attibutes"""
+        self.assertTrue('id' in self.amenity.__dict__)
+        self.assertTrue('created_at' in self.amenity.__dict__)
+        self.assertTrue('updated_at' in self.amenity.__dict__)
+        self.assertTrue('name' in self.amenity.__dict__)
+
+    def test_is_subclass_Amenity(self):
+        """test if Amenity is subclass of Basemodel"""
+        self.assertTrue(issubclass(self.amenity.__class__, BaseModel), True)
+
+    def test_attribute_types_Amenity(self):
+        """test attribute type for Amenity"""
+        self.assertEqual(type(self.amenity.name), str)
+
+    def test_save_Amenity(self):
+        """test if the save works"""
+        self.amenity.save()
+        self.assertNotEqual(self.amenity.created_at, self.amenity.updated_at)
+
+    def test_to_dict_Amenity(self):
+        """test if dictionary works"""
+        self.assertEqual('to_dict' in dir(self.amenity), True)
+
+
+if __name__ == "__main__":
+    unittest.main()

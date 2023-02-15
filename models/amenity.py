@@ -1,16 +1,13 @@
 #!/usr/bin/python3
-"""
-Amenity Class from Models Module
-"""
+""" State Module for HBNB project """
+from models.base_model import BaseModel, Base
+from sqlalchemy import Column, String
+from sqlalchemy.orm import relationship
+from models.place import place_amenity
 
-from models.base_model import BaseModel
 
-
-class Amenity(BaseModel):
-    """Amenity class handles all application amenities"""
-
-    name = ''
-
-    def __init__(self, *args, **kwargs):
-        """instantiates a new amenity"""
-        super().__init__(self, *args, **kwargs)
+class Amenity(BaseModel, Base):
+    """ Amenity Class """
+    __tablename__ = "amenities"
+    name = Column(String(128), nullable=False)
+    place_amenities = relationship("Place", secondary=place_amenity)
